@@ -3,37 +3,33 @@ package com.hemebiotech.analytics;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Collection.*;
 
 public class AnalyticsCounter {
 
 	public static void main(String args[]) throws Exception {
 
-		ReadSymptomDataFromFile dataInput = new ReadSymptomDataFromFile("symptoms.txt");
+        HashMap hm = new HashMap();
+        int occurence = 0;
+        ReadSymptomDataFromFile dataInput = new ReadSymptomDataFromFile("symptoms.txt");
 		List<String> symptomsList = dataInput.GetSymptoms();
 
 		//Sorting the symptoms list alphabetically
 		symptomsList.sort(Comparator.naturalOrder());
-		System.out.println(symptomsList); //check the result in terminal
-		System.out.println(symptomsList.size()); //check the result in terminal
 
-		//compare elements in list
-		for (int i = 0 ; i < symptomsList.size() ; i++) { //Run the tab
-
-		}
-
-		//test HashMap
-		HashMap hm = new HashMap();
-		hm.put("test 1", 2);
-		hm.put("test 2", 12);
-		hm.put("test 3", 26);
-		System.out.println(hm);
+        Set<String> mySet = new HashSet<String>(symptomsList);
+        List<String> sortedList = new ArrayList<String>(mySet);
 
 
-		//Créer une fonction WriteFileFromMap
+        for (int i = 0 ; i < sortedList.size() ; i++) {
+            hm.put(sortedList.get(i),Collections.frequency(symptomsList,sortedList.get(i)));
+        }
+
+        hm.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(System.out::println);
+
+		// -->> Create WriteFileFromMap function
 		FileWriter dataOutput = new FileWriter ("result.txt");
 		dataOutput.close();
 
