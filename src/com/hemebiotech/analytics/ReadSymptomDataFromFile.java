@@ -25,10 +25,9 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	/**
 	 *allow to generate a List String from a text file
 	 *
-	 * @throws IOException if I/O operations failed or interrupt
 	 */
 	@Override
-	public List<String> GetSymptoms() {
+	public List<String> GetSymptoms(){
 		ArrayList<String> result = new ArrayList<String>();
 		
 		if (filepath != null) {
