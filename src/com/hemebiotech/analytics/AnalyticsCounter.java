@@ -13,45 +13,13 @@ import static java.util.Collection.*;
 
 
 public class AnalyticsCounter {
-    /**
-     * data is a list of String elements
-     *
-     */
-    private List<String> data;
-    /**
-     *a Map that contains String keys and value
-     */
-    private Map symptomsOccurrence = new HashMap();
-    /**
-     *a Map that contains String keys and Long value organized alphabetically form the symptomsOccurence Map
-     * @see Map symptomsOccurence
-     */
-    private TreeMap<String, Long> map = new TreeMap<String, Long>();
 
-    /**
-     *Constructor
-     *
-     * @param data
-     *      a list of String from a text file that use the ReadSymptomDataFromFile class
-     * @see ReadSymptomDataFromFile
-     *
-     */
-
-    //----CONSTRUCTOR----
-    public AnalyticsCounter(List<String> data) {
-
-        this.data = data;
-
-    }
-
-    //----METHODS----
     /**
      *this method allow to write the list from the data List String, in the terminal
      */
-    public void reading() {
+    public List<String> reading(ReadSymptomDataFromFile dataInput) {
 
-        System.out.println("\n-------------- READING SYMPTOMS LIST ----------------\n");
-        System.out.println(data);
+        return dataInput.GetSymptoms();
 
     }
     /**
@@ -59,21 +27,19 @@ public class AnalyticsCounter {
      *
      * <p>It will re organize alphabetically and count the occurrence number and put all in a TreeMap.</p>
      */
-    public void sorting(){
+    public TreeMap<String, Integer> sorting(List<String> list){
 
-        Set<String> noDuplicateSet = new HashSet<String>(data); // Delete duplicates
+        Set<String> noDuplicateSet = new HashSet<String>(list); // Delete duplicates
         List<String> noDuplicateList = new ArrayList<String>(noDuplicateSet); // new list without duplicates
+        Map symptomsOccurrence = new HashMap(); //
+        TreeMap<String, Integer> map = new TreeMap<String, Integer>();
 
         for (String symptom : noDuplicateList) { // fill the Map with symptoms(key) and occurrences(value)
-            symptomsOccurrence.put(symptom,Collections.frequency(data,symptom));
+            symptomsOccurrence.put(symptom,Collections.frequency(list,symptom));
         }
 
         map.putAll(symptomsOccurrence);
-
-        System.out.println("\n-------------- READING SORTED SYMPTOMS LIST ----------------\n");
-
-        symptomsOccurrence.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(System.out::println);
-
+        return map;
     }
     /**
      *allow to write in a file the result of the sorting() method.
@@ -81,16 +47,15 @@ public class AnalyticsCounter {
      *
      * @throws IOException if I/O operations failed or interrupt
      */
-    public void saving() throws IOException {
+    public void saving(TreeMap<String, Integer> map) {
 
-        sorting();
-        System.out.println("\n*** saving sorted symptoms list in \"../results.out\" file.................................");
+        System.out.println("\n*** saving sorted symptoms list in \"../result.out\" file.................................");
 
         try {
 
-            File results = new File("results.out");
+            File results = new File("result.out");
             BufferedWriter writer = new BufferedWriter(new FileWriter (results));
-            for(Map.Entry<String, Long> entry : map.entrySet()) {
+            for(Map.Entry<String, Integer> entry : map.entrySet()) {
 
                 writer.write(entry.getKey() + " = " + entry.getValue());
                 writer.newLine();
@@ -101,8 +66,6 @@ public class AnalyticsCounter {
             writer.close();
             System.out.println("* file saved !\n");
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

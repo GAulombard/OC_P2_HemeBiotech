@@ -22,7 +22,11 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 
 		this.filepath = filepath;
 	}
-	
+	/**
+	 *allow to generate a List String from a text file
+	 *
+	 * @throws IOException if I/O operations failed or interrupt
+	 */
 	@Override
 	public List<String> GetSymptoms() {
 		ArrayList<String> result = new ArrayList<String>();
